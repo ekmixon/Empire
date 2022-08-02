@@ -14,7 +14,7 @@ class Module:
             'Background' : True,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : False,
 
             'OpsecSafe' : True,
@@ -22,7 +22,7 @@ class Module:
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'https://github.com/mattifestation/PowerSploit/blob/master/Exfiltration/Get-Keystrokes.ps1'
             ]

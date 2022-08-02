@@ -29,7 +29,7 @@ class Module:
 
             # True if the method doesn't touch disk/is reasonably opsec safe
             'OpsecSafe' : True,
-            
+
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
@@ -62,7 +62,7 @@ class Module:
         #   like listeners/agent handlers/etc.
         self.mainMenu = mainMenu
 
-      
+
         if params:
             for param in params:
                 # parameter format is [Name, Value]

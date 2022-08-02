@@ -17,15 +17,15 @@ class Module:
             'Background' : False,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : True,
 
             'OpsecSafe' : True,
-            
+
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
-            
+
             'Comments': []
         }
 

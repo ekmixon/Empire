@@ -35,95 +35,93 @@ class Listener:
 
         # any options needed by the stager, settable during runtime
         self.options = {
-            # format:
-            #   value_name : {description, required, default_value}
-
-            'Name' : {
-                'Description'   :   'Name for the listener.',
-                'Required'      :   True,
-                'Value'         :   'mapi'
+            'Name': {
+                'Description': 'Name for the listener.',
+                'Required': True,
+                'Value': 'mapi',
             },
-            'Host' : {
-                'Description'   :   'Hostname/IP for staging.',
-                'Required'      :   True,
-                'Value'         :   "http://%s:%s" % (helpers.lhost(), 80)
+            'Host': {
+                'Description': 'Hostname/IP for staging.',
+                'Required': True,
+                'Value': f"http://{helpers.lhost()}:80",
             },
-            'BindIP' : {
-                'Description'   :   'The IP to bind to on the control server.',
-                'Required'      :   True,
-                'Value'         :   '0.0.0.0'
+            'BindIP': {
+                'Description': 'The IP to bind to on the control server.',
+                'Required': True,
+                'Value': '0.0.0.0',
             },
-            'Port' : {
-                'Description'   :   'Port for the listener.',
-                'Required'      :   True,
-                'Value'         :   80
+            'Port': {
+                'Description': 'Port for the listener.',
+                'Required': True,
+                'Value': 80,
             },
-            'StagingKey' : {
-                'Description'   :   'Staging key for initial agent negotiation.',
-                'Required'      :   True,
-                'Value'         :   '2c103f2c4ed1e59c0b4e2e01821770fa'
+            'StagingKey': {
+                'Description': 'Staging key for initial agent negotiation.',
+                'Required': True,
+                'Value': '2c103f2c4ed1e59c0b4e2e01821770fa',
             },
-            'DefaultDelay' : {
-                'Description'   :   'Agent delay/reach back interval (in seconds).',
-                'Required'      :   True,
-                'Value'         :   0
+            'DefaultDelay': {
+                'Description': 'Agent delay/reach back interval (in seconds).',
+                'Required': True,
+                'Value': 0,
             },
-            'DefaultJitter' : {
-                'Description'   :   'Jitter in agent reachback interval (0.0-1.0).',
-                'Required'      :   True,
-                'Value'         :   0.0
+            'DefaultJitter': {
+                'Description': 'Jitter in agent reachback interval (0.0-1.0).',
+                'Required': True,
+                'Value': 0.0,
             },
-            'DefaultLostLimit' : {
-                'Description'   :   'Number of missed checkins before exiting',
-                'Required'      :   True,
-                'Value'         :   60
+            'DefaultLostLimit': {
+                'Description': 'Number of missed checkins before exiting',
+                'Required': True,
+                'Value': 60,
             },
-            'DefaultProfile' : {
-                'Description'   :   'Default communication profile for the agent.',
-                'Required'      :   True,
-                'Value'         :   "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
+            'DefaultProfile': {
+                'Description': 'Default communication profile for the agent.',
+                'Required': True,
+                'Value': "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
             },
-            'CertPath' : {
-                'Description'   :   'Certificate path for https listeners.',
-                'Required'      :   False,
-                'Value'         :   ''
+            'CertPath': {
+                'Description': 'Certificate path for https listeners.',
+                'Required': False,
+                'Value': '',
             },
-            'KillDate' : {
-                'Description'   :   'Date for the listener to exit (MM/dd/yyyy).',
-                'Required'      :   False,
-                'Value'         :   ''
+            'KillDate': {
+                'Description': 'Date for the listener to exit (MM/dd/yyyy).',
+                'Required': False,
+                'Value': '',
             },
-            'WorkingHours' : {
-                'Description'   :   'Hours for the agent to operate (09:00-17:00).',
-                'Required'      :   False,
-                'Value'         :   ''
+            'WorkingHours': {
+                'Description': 'Hours for the agent to operate (09:00-17:00).',
+                'Required': False,
+                'Value': '',
             },
-            'ServerVersion' : {
-                'Description'   :   'TServer header for the control server.',
-                'Required'      :   True,
-                'Value'         :   'Microsoft-IIS/7.5'
+            'ServerVersion': {
+                'Description': 'TServer header for the control server.',
+                'Required': True,
+                'Value': 'Microsoft-IIS/7.5',
             },
-            'Folder' : {
-                'Description'   :   'The hidden folder in Exchange to user',
-                'Required'      :   True,
-                'Value'         :   'Liniaal'
+            'Folder': {
+                'Description': 'The hidden folder in Exchange to user',
+                'Required': True,
+                'Value': 'Liniaal',
             },
-            'Email' : {
-                'Description'   :   'The email address of our target',
-                'Required'      :   False,
-                'Value'         :   ''
+            'Email': {
+                'Description': 'The email address of our target',
+                'Required': False,
+                'Value': '',
             },
-            'SlackToken' : {
-                'Description'   :   'Your SlackBot API token to communicate with your Slack instance.',
-                'Required'      :   False,
-                'Value'         :   ''
+            'SlackToken': {
+                'Description': 'Your SlackBot API token to communicate with your Slack instance.',
+                'Required': False,
+                'Value': '',
             },
-            'SlackChannel' : {
-                'Description'   :   'The Slack channel or DM that notifications will be sent to.',
-                'Required'      :   False,
-                'Value'         :   '#general'
-            }
+            'SlackChannel': {
+                'Description': 'The Slack channel or DM that notifications will be sent to.',
+                'Required': False,
+                'Value': '#general',
+            },
         }
+
 
         # required:
         self.mainMenu = mainMenu
@@ -141,8 +139,11 @@ class Listener:
         """
         Returns a default HTTP server page.
         """
-        page = "<html><body><h1>It works!</h1>"
-        page += "<p>This is the default web page for this server.</p>"
+        page = (
+            "<html><body><h1>It works!</h1>"
+            + "<p>This is the default web page for this server.</p>"
+        )
+
         page += "<p>The web server software is running but no content has been added, yet.</p>"
         page += "</body></html>"
         return page
@@ -650,19 +651,13 @@ class Listener:
         self.threads dictionary keyed by the listener name.
         """
         listenerOptions = self.options
-        if name and name != '':
-            self.threads[name] = helpers.KThread(target=self.start_server, args=(listenerOptions,))
-            self.threads[name].start()
-            time.sleep(1)
-            # returns True if the listener successfully started, false otherwise
-            return self.threads[name].is_alive()
-        else:
+        if not name or name == '':
             name = listenerOptions['Name']['Value']
-            self.threads[name] = helpers.KThread(target=self.start_server, args=(listenerOptions,))
-            self.threads[name].start()
-            time.sleep(1)
-            # returns True if the listener successfully started, false otherwise
-            return self.threads[name].is_alive()
+        self.threads[name] = helpers.KThread(target=self.start_server, args=(listenerOptions,))
+        self.threads[name].start()
+        time.sleep(1)
+        # returns True if the listener successfully started, false otherwise
+        return self.threads[name].is_alive()
 
 
     def shutdown(self, name=''):

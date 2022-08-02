@@ -38,110 +38,108 @@ class Listener:
 
         # any options needed by the stager, settable during runtime
         self.options = {
-            # format:
-            #   value_name : {description, required, default_value}
-
-            'Name' : {
-                'Description'   :   'Name for the listener.',
-                'Required'      :   True,
-                'Value'         :   'http'
+            'Name': {
+                'Description': 'Name for the listener.',
+                'Required': True,
+                'Value': 'http',
             },
-            'Host' : {
-                'Description'   :   'Hostname/IP for staging.',
-                'Required'      :   True,
-                'Value'         :   "http://%s:%s" % (helpers.lhost(), 80)
+            'Host': {
+                'Description': 'Hostname/IP for staging.',
+                'Required': True,
+                'Value': f"http://{helpers.lhost()}:80",
             },
-            'BindIP' : {
-                'Description'   :   'The IP to bind to on the control server.',
-                'Required'      :   True,
-                'Value'         :   '0.0.0.0'
+            'BindIP': {
+                'Description': 'The IP to bind to on the control server.',
+                'Required': True,
+                'Value': '0.0.0.0',
             },
-            'Port' : {
-                'Description'   :   'Port for the listener.',
-                'Required'      :   True,
-                'Value'         :   80
+            'Port': {
+                'Description': 'Port for the listener.',
+                'Required': True,
+                'Value': 80,
             },
-            'Launcher' : {
-                'Description'   :   'Launcher string.',
-                'Required'      :   True,
-                'Value'         :   'powershell -noP -sta -w 1 -enc '
+            'Launcher': {
+                'Description': 'Launcher string.',
+                'Required': True,
+                'Value': 'powershell -noP -sta -w 1 -enc ',
             },
-            'StagingKey' : {
-                'Description'   :   'Staging key for initial agent negotiation.',
-                'Required'      :   True,
-                'Value'         :   '2c103f2c4ed1e59c0b4e2e01821770fa'
+            'StagingKey': {
+                'Description': 'Staging key for initial agent negotiation.',
+                'Required': True,
+                'Value': '2c103f2c4ed1e59c0b4e2e01821770fa',
             },
-            'DefaultDelay' : {
-                'Description'   :   'Agent delay/reach back interval (in seconds).',
-                'Required'      :   True,
-                'Value'         :   5
+            'DefaultDelay': {
+                'Description': 'Agent delay/reach back interval (in seconds).',
+                'Required': True,
+                'Value': 5,
             },
-            'DefaultJitter' : {
-                'Description'   :   'Jitter in agent reachback interval (0.0-1.0).',
-                'Required'      :   True,
-                'Value'         :   0.0
+            'DefaultJitter': {
+                'Description': 'Jitter in agent reachback interval (0.0-1.0).',
+                'Required': True,
+                'Value': 0.0,
             },
-            'DefaultLostLimit' : {
-                'Description'   :   'Number of missed checkins before exiting',
-                'Required'      :   True,
-                'Value'         :   60
+            'DefaultLostLimit': {
+                'Description': 'Number of missed checkins before exiting',
+                'Required': True,
+                'Value': 60,
             },
-            'DefaultProfile' : {
-                'Description'   :   'Default communication profile for the agent.',
-                'Required'      :   True,
-                'Value'         :   "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
+            'DefaultProfile': {
+                'Description': 'Default communication profile for the agent.',
+                'Required': True,
+                'Value': "/admin/get.php,/news.php,/login/process.php|Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
             },
-            'CertPath' : {
-                'Description'   :   'Certificate path for https listeners.',
-                'Required'      :   False,
-                'Value'         :   ''
+            'CertPath': {
+                'Description': 'Certificate path for https listeners.',
+                'Required': False,
+                'Value': '',
             },
-            'KillDate' : {
-                'Description'   :   'Date for the listener to exit (MM/dd/yyyy).',
-                'Required'      :   False,
-                'Value'         :   ''
+            'KillDate': {
+                'Description': 'Date for the listener to exit (MM/dd/yyyy).',
+                'Required': False,
+                'Value': '',
             },
-            'WorkingHours' : {
-                'Description'   :   'Hours for the agent to operate (09:00-17:00).',
-                'Required'      :   False,
-                'Value'         :   ''
+            'WorkingHours': {
+                'Description': 'Hours for the agent to operate (09:00-17:00).',
+                'Required': False,
+                'Value': '',
             },
-            'ServerVersion' : {
-                'Description'   :   'Server header for the control server.',
-                'Required'      :   True,
-                'Value'         :   'Microsoft-IIS/7.5'
+            'ServerVersion': {
+                'Description': 'Server header for the control server.',
+                'Required': True,
+                'Value': 'Microsoft-IIS/7.5',
             },
-            'StagerURI' : {
-                'Description'   :   'URI for the stager. Must use /download/. Example: /download/stager.php',
-                'Required'      :   False,
-                'Value'         :   ''
+            'StagerURI': {
+                'Description': 'URI for the stager. Must use /download/. Example: /download/stager.php',
+                'Required': False,
+                'Value': '',
             },
-            'UserAgent' : {
-                'Description'   :   'User-agent string to use for the staging request (default, none, or other).',
-                'Required'      :   False,
-                'Value'         :   'default'
+            'UserAgent': {
+                'Description': 'User-agent string to use for the staging request (default, none, or other).',
+                'Required': False,
+                'Value': 'default',
             },
-            'Proxy' : {
-                'Description'   :   'Proxy to use for request (default, none, or other).',
-                'Required'      :   False,
-                'Value'         :   'default'
+            'Proxy': {
+                'Description': 'Proxy to use for request (default, none, or other).',
+                'Required': False,
+                'Value': 'default',
             },
-            'ProxyCreds' : {
-                'Description'   :   'Proxy credentials ([domain\]username:password) to use for request (default, none, or other).',
-                'Required'      :   False,
-                'Value'         :   'default'
+            'ProxyCreds': {
+                'Description': 'Proxy credentials ([domain\]username:password) to use for request (default, none, or other).',
+                'Required': False,
+                'Value': 'default',
             },
-            'SlackToken' : {
-                'Description'   :   'Your SlackBot API token to communicate with your Slack instance.',
-                'Required'      :   False,
-                'Value'         :   ''
+            'SlackToken': {
+                'Description': 'Your SlackBot API token to communicate with your Slack instance.',
+                'Required': False,
+                'Value': '',
             },
-            'SlackChannel' : {
-                'Description'   :   'The Slack channel or DM that notifications will be sent to.',
-                'Required'      :   False,
-                'Value'         :   '#general'
-            }
+            'SlackChannel': {
+                'Description': 'The Slack channel or DM that notifications will be sent to.',
+                'Required': False,
+                'Value': '#general',
+            },
         }
+
 
         # required:
         self.mainMenu = mainMenu

@@ -20,7 +20,7 @@ class Module:
             'NeedsAdmin' : False,
 
             'OpsecSafe' : True,
-			
+
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
@@ -39,7 +39,7 @@ class Module:
                 'Required'      :   True,
                 'Value'         :   ''
             },
-			'ConsoleOutput' : {
+    			'ConsoleOutput' : {
                 'Description'   :   '(Low/Medium/Y) Default = Y: Enable/Disable real time console output. Medium and Low can be used to reduce output.',
                 'Required'      :   False,
                 'Value'         :   ''
@@ -54,12 +54,12 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'ElevatedPrivilege' : {
+    			'ElevatedPrivilege' : {
                 'Description'   :   '(Auto/Y/N) Default = Auto: Set the privilege mode. Auto will determine if Inveigh is running with elevated privilege. If so, options that require elevated privilege can be used.',
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'HTTP' : {
+    			'HTTP' : {
                 'Description'   :   '(Y/N) Default = Y: Enable/Disable HTTP challenge/response capture.',
                 'Required'      :   False,
                 'Value'         :   ''
@@ -69,17 +69,17 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'HTTPContentType' : {
+    			'HTTPContentType' : {
                 'Description'   :   'Content type for HTTP/Proxy responses. Does not apply to EXEs and wpad.dat. Set to "application/hta" for HTA files or when using HTA code with HTTPResponse.',
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'HTTPResponse' : {
+    			'HTTPResponse' : {
                 'Description'   :   'Content to serve as the default HTTP/Proxy response. This response will not be used for wpad.dat requests. Use PowerShell escape characters and newlines where necessary. This paramater will be wrapped in double quotes by this module.',
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'Inspect' : {
+    			'Inspect' : {
                 'Description'   :   '(Switch) Inspect LLMNR, mDNS, and NBNS traffic only.',
                 'Required'      :   False,
                 'Value'         :   ''
@@ -89,7 +89,7 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'LLMNR' : {
+    			'LLMNR' : {
                 'Description'   :   '(Y/N) Default = Y: Enable/Disable LLMNR spoofer.',
                 'Required'      :   False,
                 'Value'         :   ''
@@ -114,27 +114,27 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'Proxy' : {
+    			'Proxy' : {
                 'Description'   :   '(Y/N) Enable/Disable Inveigh\'s proxy server authentication capture.',
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'ProxyPort' : {
+    			'ProxyPort' : {
                 'Description'   :   'Default = 8492: TCP port for the Inveigh\'s proxy listener.',
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'RunCount' : {
+    			'RunCount' : {
                 'Description'   :   'Number of NTLMv1/NTLMv2 captures to perform before auto-exiting.',
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'RunTime' : {
+    			'RunTime' : {
                 'Description'   :   'Run time duration in minutes.',
                 'Required'      :   True,
                 'Value'         :   ''
             },
-			'SMB' : {
+    			'SMB' : {
                 'Description'   :   '(Y/N) Default = Y: Enable/Disable SMB challenge/response capture.',
                 'Required'      :   False,
                 'Value'         :   ''
@@ -154,7 +154,7 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             },
-			'SpooferIPsIgnore' : {
+    			'SpooferIPsIgnore' : {
                 'Description'   :   'Comma separated list of source IP addresses to ignore when spoofing.',
                 'Required'      :   False,
                 'Value'         :   ''
@@ -184,7 +184,7 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             }
-			
+
         }
 
         # save off a copy of the mainMenu object to access external functionality

@@ -49,7 +49,7 @@ for headerRaw in headersRaw:
         headerKey = headerRaw.split(":")[0]
         headerValue = headerRaw.split(":")[1]
         if headerKey.lower() == "cookie":
-            headers['Cookie'] = "%s;%s" % (headers['Cookie'], headerValue)
+            headers['Cookie'] = f"{headers['Cookie']};{headerValue}"
         else:
             headers[headerKey] = headerValue
     except:
@@ -72,7 +72,7 @@ except:
 
 # decrypt the server's public key and the server nonce
 packet = aes_decrypt_and_verify(stagingKey, response)
-nonce = packet[0:16]
+nonce = packet[:16]
 serverPub = int(packet[16:])
 
 # calculate the shared secret

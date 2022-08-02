@@ -15,7 +15,7 @@ class Module:
             'Background' : True,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : True,
 
             'OpsecSafe' : False,
@@ -64,7 +64,7 @@ class Module:
         # save off a copy of the mainMenu object to access external functionality
         #   like listeners/agent handlers/etc.
         self.mainMenu = mainMenu
-        
+
         for param in params:
             # parameter format is [Name, Value]
             option, value = param

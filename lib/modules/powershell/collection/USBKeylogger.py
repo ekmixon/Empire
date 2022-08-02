@@ -14,13 +14,13 @@ class Module:
             'Background' : True,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : True,
 
             'OpsecSafe' : True,
 
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'https://github.com/CyberPoint/Ruxcon2016ETW/tree/master/KeyloggerPOC',
                 'https://github.com/CyberPoint/ETWKeyLogger_PSE',

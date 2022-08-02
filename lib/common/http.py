@@ -26,8 +26,11 @@ def default_page():
     """
     Returns the default page for this server.
     """
-    page = "<html><body><h1>It works!</h1>"
-    page += "<p>This is the default web page for this server.</p>"
+    page = (
+        "<html><body><h1>It works!</h1>"
+        + "<p>This is the default web page for this server.</p>"
+    )
+
     page += "<p>The web server software is running but no content has been added, yet.</p>"
     page += "</body></html>"
     return page
@@ -56,7 +59,7 @@ def checksum8(s):
     """
     Add up all character values and mods the total by 256.
     """
-    return sum([ord(ch) for ch in s]) % 0x100
+    return sum(ord(ch) for ch in s) % 0x100
 
 
 ###############################################################
@@ -85,8 +88,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         clientIP = self.client_address[0]
         sessionID = None
 
-        cookie = self.headers.getheader("Cookie")
-        if cookie:
+        if cookie := self.headers.getheader("Cookie"):
             # search for a SESSIONID value in the cookie
             parts = cookie.split(";")
             for part in parts:
@@ -123,8 +125,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         clientIP = self.client_address[0]
         sessionID = None
 
-        cookie = self.headers.getheader("Cookie")
-        if cookie:
+        if cookie := self.headers.getheader("Cookie"):
             # search for a SESSIONID value in the cookie
             parts = cookie.split(";")
             for part in parts:
@@ -161,7 +162,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         # self.wfile.close() # causes an error with HTTP comms
 
     # supress all the stupid default stdout/stderr output
-    def log_message(*arg):
+    def log_message(self):
         pass
 
 
@@ -210,7 +211,7 @@ class EmpireServer(threading.Thread):
         except Exception as e:
             self.success = False
             # shoot off an error if the listener doesn't stand up
-            message = "[!] Error starting listener on port {}: {}".format(port, e)
+            message = f"[!] Error starting listener on port {port}: {e}"
             signal = json.dumps({
                 'print': True,
                 'message': message

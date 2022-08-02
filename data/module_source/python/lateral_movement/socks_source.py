@@ -120,7 +120,7 @@ class Tunnel(object):
 
     @property
     def channel_id_map(self):
-        return {x: y for x, y in self.channels}
+        return dict(self.channels)
 
     @property
     def id_channel_map(self):
@@ -182,10 +182,10 @@ class Tunnel(object):
     def recv_message(self):
         data = b''
         while len(data) < Message.HDR_SIZE:
-            _data = self.transport.recv(Message.HDR_SIZE - len(data))
-            if not _data:
+            if _data := self.transport.recv(Message.HDR_SIZE - len(data)):
+                data += _data
+            else:
                 break
-            data += _data
         if len(data) != Message.HDR_SIZE:
             raise ValueError()
         msg_type, channel_id, length = Message.parse_hdr(data)

@@ -28,11 +28,11 @@ class Module:
             # True if the method doesn't touch disk/is reasonably opsec safe
             # Disabled - this can be a relatively noisy module but sometimes useful
             'OpsecSafe' : True,
-            
-	    'Language' : 'powershell',
+
+    	'Language' : 'powershell',
 
             # The minimum PowerShell version needed for the module to run
-	    'MinLanguageVersion' : '3',
+    	'MinLanguageVersion' : '3',
 
             # list of any references/other comments
             'Comments': [
@@ -95,7 +95,7 @@ class Module:
                 'Required'      :   False,
                 'Value'         :   ''
             }
-            
+
         }
 
         # save off a copy of the mainMenu object to access external functionality

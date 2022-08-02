@@ -17,7 +17,7 @@ class Module:
             'Background' : False,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : False,
 
             'OpsecSafe' : True,

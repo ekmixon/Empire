@@ -19,7 +19,7 @@ class Module:
             'Background' : False,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : False,
 
             'OpsecSafe' : True,
@@ -27,7 +27,7 @@ class Module:
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'http://www.exploit-monday.com',
                 'https://github.com/mattifestation/PowerSploit/blob/master/CodeExecution/Invoke-ShellcodeMSIL.ps1'
@@ -53,7 +53,7 @@ class Module:
         # save off a copy of the mainMenu object to access external functionality
         #   like listeners/agent handlers/etc.
         self.mainMenu = mainMenu
-        
+
         for param in params:
             # parameter format is [Name, Value]
             option, value = param

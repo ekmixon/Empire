@@ -20,25 +20,23 @@ class Listener:
 
         # any options needed by the stager, settable during runtime
         self.options = {
-            # format:
-            #   value_name : {description, required, default_value}
-
-            'Name' : {
-                'Description'   :   'Name for the listener.',
-                'Required'      :   True,
-                'Value'         :   'meterpreter'
+            'Name': {
+                'Description': 'Name for the listener.',
+                'Required': True,
+                'Value': 'meterpreter',
             },
-            'Host' : {
-                'Description'   :   'Hostname/IP for staging.',
-                'Required'      :   True,
-                'Value'         :   "http://%s:%s" % (helpers.lhost(), 80)
+            'Host': {
+                'Description': 'Hostname/IP for staging.',
+                'Required': True,
+                'Value': f"http://{helpers.lhost()}:80",
             },
-            'Port' : {
-                'Description'   :   'Port for the listener.',
-                'Required'      :   True,
-                'Value'         :   80
-            }
+            'Port': {
+                'Description': 'Port for the listener.',
+                'Required': True,
+                'Value': 80,
+            },
         }
+
 
         # required:
         self.mainMenu = mainMenu

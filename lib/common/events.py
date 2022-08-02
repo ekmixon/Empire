@@ -24,7 +24,7 @@ def agent_rename(old_name, new_name):
     """
     # make sure to include new_name in there so it will persist if the agent
     # is renamed again - that way we can still trace the trail back if needed
-    message = "[*] Agent {} has been renamed to {}".format(old_name, new_name)
+    message = f"[*] Agent {old_name} has been renamed to {new_name}"
     signal = json.dumps({
         'print': False,
         'message': message,
@@ -35,8 +35,8 @@ def agent_rename(old_name, new_name):
     # signal twice, once for each name (that way, if you search by sender,
     # the last thing in the old agent and the first thing in the new is that
     # it has been renamed)
-    dispatcher.send(signal, sender="agents/{}".format(old_name))
-    dispatcher.send(signal, sender="agents/{}".format(new_name))
+    dispatcher.send(signal, sender=f"agents/{old_name}")
+    dispatcher.send(signal, sender=f"agents/{new_name}")
 
     # TODO rename all events left over using agent's old name?
     # in order to handle "agents/<name>" as well as "agents/<name>/stuff"

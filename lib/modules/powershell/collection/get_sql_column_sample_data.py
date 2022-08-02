@@ -12,13 +12,13 @@ class Module:
                             'numbers.'),
             'Background' : True,
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : False,
             'OpsecSafe' : True,
             'Language' : 'powershell',
             'MinPSVersion' : '2',	
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'https://github.com/NetSPI/PowerUpSQL/blob/master/PowerUpSQL.ps1'
             ]

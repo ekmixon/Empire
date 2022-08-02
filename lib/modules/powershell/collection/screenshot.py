@@ -15,7 +15,7 @@ class Module:
             'Background' : False,
 
             'OutputExtension' : 'png',
-            
+
             'NeedsAdmin' : False,
 
             'OpsecSafe' : True,
@@ -23,7 +23,7 @@ class Module:
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'https://github.com/mattifestation/PowerSploit/blob/master/Exfiltration/Get-TimedScreenshot.ps1'
             ]
@@ -48,7 +48,7 @@ class Module:
         # save off a copy of the mainMenu object to access external functionality
         #   like listeners/agent handlers/etc.
         self.mainMenu = mainMenu
-        
+
         for param in params:
             # parameter format is [Name, Value]
             option, value = param
@@ -57,7 +57,7 @@ class Module:
 
 
     def generate(self, obfuscate=False, obfuscationCommand=""):
-        
+
         script = """
 function Get-Screenshot 
 {
@@ -107,13 +107,16 @@ Get-Screenshot"""
             self.info['OutputExtension'] = 'png'
 
         for option,values in self.options.iteritems():
-            if option.lower() != "agent":
-                if values['Value'] and values['Value'] != '':
-                    if values['Value'].lower() == "true":
+            if (
+                option.lower() != "agent"
+                and values['Value']
+                and values['Value'] != ''
+            ):
+                if values['Value'].lower() == "true":
                         # if we're just adding a switch
-                        script += " -" + str(option)
-                    else:
-                        script += " -" + str(option) + " " + str(values['Value'])
+                    script += f" -{str(option)}"
+                else:
+                    script += f" -{str(option)} " + str(values['Value'])
         if obfuscate:
             script = helpers.obfuscate(self.mainMenu.installPath, psScript=script, obfuscationCommand=obfuscationCommand)
         return script

@@ -404,7 +404,11 @@ class MainMenu(cmd.Cmd):
             if self.ruler:
                 self.stdout.write("%s\n" % str(self.ruler * len(header)))
             for command in commands:
-                self.stdout.write("%s %s\n" % (command.ljust(17), getattr(self, 'do_' + command).__doc__))
+                self.stdout.write(
+                    "%s %s\n"
+                    % (command.ljust(17), getattr(self, f'do_{command}').__doc__)
+                )
+
             self.stdout.write("\n")
 
 
@@ -421,7 +425,7 @@ class MainMenu(cmd.Cmd):
     def do_plugins(self, args):
         "List all available and active plugins."
         pluginPath = os.path.abspath("plugins")
-        print(helpers.color("[*] Searching for plugins at {}".format(pluginPath)))
+        print(helpers.color(f"[*] Searching for plugins at {pluginPath}"))
         # From walk_packages: "Note that this function must import all packages
         # (not all modules!) on the given path, in order to access the __path__
         # attribute to find submodules."
@@ -430,9 +434,9 @@ class MainMenu(cmd.Cmd):
 
         # say how many we found, handling the 1 case
         if numFound == 1:
-            print(helpers.color("[*] {} plugin found".format(numFound)))
+            print(helpers.color(f"[*] {numFound} plugin found"))
         else:
-            print(helpers.color("[*] {} plugins found".format(numFound)))
+            print(helpers.color(f"[*] {numFound} plugins found"))
 
         # if we found any, list them
         if numFound > 0:
@@ -451,25 +455,27 @@ class MainMenu(cmd.Cmd):
     def do_plugin(self, pluginName):
         "Load a plugin file to extend Empire."
         pluginPath = os.path.abspath("plugins")
-        print(helpers.color("[*] Searching for plugins at {}".format(pluginPath)))
+        print(helpers.color(f"[*] Searching for plugins at {pluginPath}"))
         # From walk_packages: "Note that this function must import all packages
         # (not all modules!) on the given path, in order to access the __path__
         # attribute to find submodules."
         pluginNames = [name for _, name, _ in pkgutil.walk_packages([pluginPath])]
-        if pluginName in pluginNames:
-            print(helpers.color("[*] Plugin {} found.".format(pluginName)))
+        if pluginName not in pluginNames:
+            raise Exception(
+                f"[!] Error: the plugin specified does not exist in {pluginPath}."
+            )
 
-            message = "[*] Loading plugin {}".format(pluginName)
-            signal = json.dumps({
-                'print': True,
-                'message': message
-            })
-            dispatcher.send(signal, sender="empire")
+        print(helpers.color(f"[*] Plugin {pluginName} found."))
 
-            # 'self' is the mainMenu object
-            plugins.load_plugin(self, pluginName)
-        else:
-            raise Exception("[!] Error: the plugin specified does not exist in {}.".format(pluginPath))
+        message = f"[*] Loading plugin {pluginName}"
+        signal = json.dumps({
+            'print': True,
+            'message': message
+        })
+        dispatcher.send(signal, sender="empire")
+
+        # 'self' is the mainMenu object
+        plugins.load_plugin(self, pluginName)
 
     def postcmd(self, stop, line):
 	if len(self.resourceQueue) > 0:
@@ -916,13 +922,12 @@ class MainMenu(cmd.Cmd):
             cur.execute('select session_id, hostname, username, checkin_time from agents')
 
             rows = cur.fetchall()
-            print helpers.color("[*] Writing data/sessions.csv")
-            f = open('data/sessions.csv','w')
-            f.write("SessionID, Hostname, User Name, First Check-in\n")
-            for row in rows:
-                f.write(row[0]+ ','+ row[1]+ ','+ row[2]+ ','+ row[3]+'\n')
-            f.close()
+            self.lock.acquire()
 
+            with open('data/sessions.csv','w') as f:
+                f.write("SessionID, Hostname, User Name, First Check-in\n")
+                for row in rows:
+                    f.write(f'{row[0]},{row[1]},{row[2]},{row[3]}' + '\n')
             # Credentials CSV
             cur.execute("""
             SELECT
@@ -940,13 +945,12 @@ class MainMenu(cmd.Cmd):
             """)
 
             rows = cur.fetchall()
-            print helpers.color("[*] Writing data/credentials.csv")
-            f = open('data/credentials.csv','w')
-            f.write('Domain, Username, Host, Cred Type, Password\n')
-            for row in rows:
-                f.write(row[0]+ ','+ row[1]+ ','+ row[2]+ ','+ row[3]+ ','+ row[4]+'\n')
-            f.close()
+            self.lock.acquire()
 
+            with open('data/credentials.csv','w') as f:
+                f.write('Domain, Username, Host, Cred Type, Password\n')
+                for row in rows:
+                    f.write(f'{row[0]},{row[1]},{row[2]},{row[3]},{row[4]}' + '\n')
             # Empire Log
             cur.execute("""
             SELECT
@@ -966,13 +970,13 @@ class MainMenu(cmd.Cmd):
                 reporting.event_type == 'task' OR reporting.event_type == 'checkin'
             """)
             rows = cur.fetchall()
-            print helpers.color("[*] Writing data/master.log")
-            f = open('data/master.log', 'w')
-            f.write('Empire Master Taskings & Results Log by timestamp\n')
-            f.write('='*50 + '\n\n')
-            for row in rows:
-                f.write('\n' + row[0] + ' - ' + row[3] + ' (' + row[2] + ')> ' + unicode(row[5]) + '\n' + unicode(row[6]) + '\n')
-            f.close()
+            self.lock.acquire()
+
+            with open('data/master.log', 'w') as f:
+                f.write('Empire Master Taskings & Results Log by timestamp\n')
+                f.write('='*50 + '\n\n')
+                for row in rows:
+                    f.write('\n' + row[0] + ' - ' + row[3] + ' (' + row[2] + ')> ' + unicode(row[5]) + '\n' + unicode(row[6]) + '\n')
             cur.close()
         finally:
             self.lock.release()
@@ -986,8 +990,7 @@ class MainMenu(cmd.Cmd):
         for module_name in module_names:
             try:
                 if self.modules.modules[module_name].info['NeedsAdmin']:
-                    module_names[module_names.index(module_name)] = (module_name+"*")
-            # handle modules without a NeedAdmins info key
+                    module_names[module_names.index(module_name)] = f"{module_name}*"
             except KeyError:
                 pass
 
@@ -1165,7 +1168,11 @@ class SubMenu(cmd.Cmd):
             if self.ruler:
                 self.stdout.write("%s\n" % str(self.ruler * len(header)))
             for command in commands:
-                self.stdout.write("%s %s\n" % (command.ljust(17), getattr(self, 'do_' + command).__doc__))
+                self.stdout.write(
+                    "%s %s\n"
+                    % (command.ljust(17), getattr(self, f'do_{command}').__doc__)
+                )
+
             self.stdout.write("\n")
 
     # def preloop(self):
@@ -1231,11 +1238,11 @@ class AgentsMenu(SubMenu):
         "Lists all active agents (or listeners)."
 
         if line.lower().startswith("listeners"):
-            self.mainMenu.do_list("listeners " + str(' '.join(line.split(' ')[1:])))
+            self.mainMenu.do_list("listeners " + ' '.join(line.split(' ')[1:]))
         elif line.lower().startswith("agents"):
-            self.mainMenu.do_list("agents " + str(' '.join(line.split(' ')[1:])))
+            self.mainMenu.do_list("agents " + ' '.join(line.split(' ')[1:]))
         else:
-            self.mainMenu.do_list("agents " + str(line))
+            self.mainMenu.do_list(f"agents {str(line)}")
 
     def do_rename(self, line):
         "Rename a particular agent."
@@ -1816,12 +1823,18 @@ class PowerShellAgentMenu(SubMenu):
         try:
             signal_data = json.loads(signal)
         except ValueError:
-            print(helpers.color("[!] Error: bad signal recieved {} from sender {}".format(signal, sender)))
+            print(
+                helpers.color(
+                    f"[!] Error: bad signal recieved {signal} from sender {sender}"
+                )
+            )
+
             return
 
-        if '{} returned results'.format(self.sessionID) in signal:
-            results = self.mainMenu.agents.get_agent_results_db(self.sessionID)
-            if results:
+        if f'{self.sessionID} returned results' in signal:
+            if results := self.mainMenu.agents.get_agent_results_db(
+                self.sessionID
+            ):
                 print(helpers.color(results))
 
 

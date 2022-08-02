@@ -14,7 +14,7 @@ class Module:
             'Background' : False,
 
             'OutputExtension' : None,
-            
+
             'NeedsAdmin' : False,
 
             'OpsecSafe' : True,
@@ -22,7 +22,7 @@ class Module:
             'Language' : 'powershell',
 
             'MinLanguageVersion' : '2',
-            
+
             'Comments': [
                 'https://gallery.technet.microsoft.com/scriptcenter/Get-IndexedItem-PowerShell-5bca2dae'
             ]
@@ -47,7 +47,7 @@ class Module:
         # save off a copy of the mainMenu object to access external functionality
         #   like listeners/agent handlers/etc.
         self.mainMenu = mainMenu
-        
+
         for param in params:
             # parameter format is [Name, Value]
             option, value = param
